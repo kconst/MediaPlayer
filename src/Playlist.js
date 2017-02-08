@@ -1,5 +1,3 @@
-'use strict';
-
 class Playlist {
     constructor(items) {
         // this.playlist = items || [];
@@ -13,17 +11,41 @@ class Playlist {
             return {
                 playing: false,
                 src: item.src || item,
-                callback: item.callback
+                callback: item.callback || (() => {})
             };
         });
     }
     
     doNext() {
-        return this.playlist[this.current += 1];
+        this.current += 1;
+        
+        // return last played and do not fire callback if we reached the limit
+        if (!this.playlist[this.current]) {
+            this.current -= 1;
+            return this.playlist[this.current];
+        }
+        
+        this.playlist[this.current].callback();
+        
+        return this.playlist[this.current];
     }
     
     doPrevious() {
-        return this.playlist[this.current -= 1];
+        this.current -= 1;
+        
+        // return last played and do not fire callback if we reached the limit
+        if (!this.playlist[this.current]) {
+            this.current += 1;
+            return this.playlist[this.current];
+        }
+        
+        this.playlist[this.current].callback();
+        
+        return this.playlist[this.current];
+    }
+    
+    getActive() {
+        return this.playlist[this.current];
     }
 }
 
