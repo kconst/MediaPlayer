@@ -50,16 +50,30 @@ class MediaPlayer {
     }
     
     playNext() {
+        const nextTrack = this.playlist.doNext();
+        
+        if (!nextTrack) {
+            console.warn('reached end of playlist');
+            return;
+        }
+        
         console.log('playing next track');
-        this.setSource(this.playlist.doNext());
+        this.setSource(nextTrack);
         
         this.player.play();
     }
     
     playPrevious() {
+        const previousTrack = this.playlist.doPrevious();
+        
+        if (!previousTrack) {
+            console.warn('reached beginning of playlist');
+            return;
+        }
+        
         console.log('playing previous track');
         
-        this.setSource(this.playlist.doPrevious());
+        this.setSource(previousTrack);
         
         this.player.play();
     }
